@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEM - Coming Soon</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Poppins',sans-serif;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  transition: background 1s ease;
+  color:#fff;
+}
+.container{
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(10px);
+  padding:50px 30px;
+  border-radius:25px;
+  box-shadow:0 15px 50px rgba(0,0,0,0.6);
+  z-index:2;
+  max-width:500px;
+  width:90%;
+}
+.logo{font-size:2.5rem;font-weight:700;color:#ffd700;margin-bottom:15px;}
+h1{font-size:2.8rem;margin-bottom:20px;}
+p{font-size:1.1rem;color:#ddd;line-height:1.5;}
+.quote{margin-top:20px;font-style:italic;font-size:1rem;opacity:0;transition: opacity 1s ease;}
+.weather{position:absolute;top:20px;right:20px;font-size:2.5rem;z-index:3;cursor:pointer;transition: transform 0.2s;}
+.weather:hover{transform: scale(1.2);}
+canvas{position:absolute;top:0;left:0;z-index:1;}
+.tooltip{position:absolute;top:60px;right:20px;background: rgba(0,0,0,0.7);padding:8px 12px;border-radius:8px;color:#fff;font-size:1rem;display:none;z-index:4;}
+.alert{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(255, 215, 0, 0.9);padding:15px 25px;border-radius:15px;color:#000;font-weight:700;z-index:5;opacity:0;transition: opacity 0.5s;}
+</style>
+</head>
+<body>
+
+<div class="weather" id="weatherIcon">☀️</div>
+<div class="tooltip" id="weatherTooltip"></div>
+<div class="alert" id="weatherAlert"></div>
+
+<div class="container">
+  <div class="logo">LEM</div>
+  <h1>Coming Soon</h1>
+  <p>Lux Editing Empire Website is launching soon. Stay tuned!</p>
+  <div class="quote" id="quote"></div>
+</div>
+
+<canvas id="weatherCanvas"></canvas>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+
+// WTF bro Firebase config
+const firebaseConfig = {
+  apiKey:"AIzaSyDcEx1uATbZfPk_hD0IF3bEkEGQc6bbq3g",
+  authDomain:"nooble-forum.firebaseapp.com",
+  projectId:"nooble-forum",
+  storageBucket:"nooble-forum.firebasestorage.app",
+  messagingSenderId:"395619682731",
+  appId:"1:395619682731:web:d43f0f8fc934082a74aaee",
+  measurementId:"G-CYKP79D8Z7"
+};
+
+const app = initializeApp(firebaseConfig); // yep, we need this
+const db = getFirestore(app);
+const timerDoc = doc(db,"weather","timer"); // big brain time, sync timer
+
+// Weather definitions, yes I copied emojis, deal with it
+const weatherSequence = [
+  {name:"Sunny", icon:"☀️", bg:"linear-gradient(135deg,#f6d365,#fda085)", type:"sunny"},
+  {name:"Rain", icon:"🌧️", bg:"linear-gradient(135deg,#3a7bd5,#00d2ff)", type:"rain"},
+  {name:"Drizzle", icon:"🌦️", bg:"linear-gradient(135deg,#a1c4fd,#c2e9fb)", type:"drizzle"},
+  {name:"Snow", icon:"❄️", bg:"linear-gradient(135deg,#e0eafc,#cfdef3)", type:"snow"},
+  {name:"Heavy Snow", icon:"🌨️", bg:"linear-gradient(135deg,#dbe6f1,#b0c4de)", type:"heavysnow"},
+  {name:"Storm", icon:"🌩️", bg:"linear-gradient(135deg,#2c3e50,#4ca1af)", type:"storm"},
+  {name:"Thunderstorm", icon:"⛈️", bg:"linear-gradient(135deg,#1f1c2c,#928dab)", type:"thunderstorm"},
+  {name:"Fog", icon:"🌫️", bg:"linear-gradient(135deg,#a8a8a8,#d3d3d3)", type:"fog"},
+  {name:"Windy", icon:"💨", bg:"linear-gradient(135deg,#89f7fe,#66a6ff)", type:"windy"},
+  {name:"Cloudy", icon:"☁️", bg:"linear-gradient(135deg,#bdc3c7,#2c3e50)", type:"cloudy"},
+  {name:"Autumn Leaves", icon:"🍂", bg:"linear-gradient(135deg,#ff9966,#ff5e62)", type:"leaves"},
+  {name:"Night", icon:"🌙", bg:"linear-gradient(135deg,#0f2027,#203a43,#2c5364)", type:"night"},
+  {name:"Lightning", icon:"⚡", bg:"linear-gradient(135deg,#1c92d2,#f2fcfe)", type:"lightning"},
+  {name:"Hail", icon:"🌨️", bg:"linear-gradient(135deg,#c0c0c0,#e0e0e0)", type:"hail"},
+  {name:"Clear Night", icon:"🌌", bg:"linear-gradient(135deg,#000428,#004e92)", type:"clearnight"}
+];
+
+const canvas = document.getElementById('weatherCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+
+const weatherIcon = document.getElementById('weatherIcon');
+const tooltip = document.getElementById('weatherTooltip');
+const alertBox = document.getElementById('weatherAlert');
+
+let currentWeatherType = "";
+let particles = [];
+
+// lol alerts
+function showWeatherAlert(message){
+  alertBox.textContent = message; alertBox.style.opacity=1;
+  setTimeout(()=>{ alertBox.style.opacity=0; },3000);
+}
+
+// particle madness
+class Particle {
+  constructor(type){ this.type=type; this.reset(); }
+  reset(){ 
+    this.x=Math.random()*canvas.width;
+    this.y=Math.random()*canvas.height;
+    this.size=Math.random()*3+1;
+    this.speedX=(Math.random()-0.5)*(this.type==="windy"?4:1);
+    this.speedY=Math.random()*3+0.5;
+    this.angle=Math.random()*Math.PI*2; this.alpha=Math.random()*0.8+0.2;
+  }
+  update(){
+    switch(this.type){
+      case "rain": case "drizzle": case "storm": case "thunderstorm":
+        this.y+=this.speedY*4; this.x+=this.speedX*2; if(this.y>canvas.height) this.reset(); break;
+      case "snow": case "heavysnow":
+        this.y+=this.speedY; this.x+=Math.sin(this.angle)*0.5; this.angle+=0.01; if(this.y>canvas.height) this.reset(); break;
+      case "windy":
+        this.x+=this.speedX*3; this.y+=this.speedY*0.2; if(this.x>canvas.width||this.x<0) this.reset(); break;
+      case "leaves":
+        this.x+=Math.sin(this.angle)*2; this.y+=Math.cos(this.angle)*2; this.angle+=0.02; if(this.y>canvas.height) this.reset(); break;
+    }
+  }
+  draw(){
+    ctx.save();
+    switch(this.type){
+      case "rain": case "drizzle": case "storm": case "thunderstorm":
+        ctx.strokeStyle=`rgba(174,194,224,${this.alpha})`; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.moveTo(this.x,this.y); ctx.lineTo(this.x+this.speedX*2,this.y+this.speedY*4); ctx.stroke(); break;
+      case "snow": case "heavysnow":
+        ctx.fillStyle=`rgba(255,255,255,${this.alpha})`; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); break;
+      case "windy":
+        ctx.strokeStyle=`rgba(255,255,255,${this.alpha})`; ctx.beginPath(); ctx.moveTo(this.x,this.y); ctx.lineTo(this.x+this.speedX*5,this.y+this.speedY*2); ctx.stroke(); break;
+      case "leaves": ctx.translate(this.x,this.y); ctx.rotate(this.angle); ctx.font="20px Arial"; ctx.fillText("🍂",0,0); break;
+    }
+    ctx.restore();
+  }
+}
+
+// particle generator
+function createParticles(type){
+  particles=[]; let count=100;
+  switch(type){
+    case "rain": count=250; break; case "drizzle": count=150; break; case "snow": count=150; break;
+    case "heavysnow": count=200; break; case "storm": count=180; break; case "thunderstorm": count=200; break;
+    case "fog": count=80; break; case "windy": count=80; break; case "leaves": count=100; break;
+    case "hail": count=150; break; case "sunny": count=50; break; case "cloudy": count=60; break;
+  }
+  for(let i=0;i<count;i++) particles.push(new Particle(type));
+}
+
+// draw everything
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(currentWeatherType==="fog"){ for(let i=0;i<50;i++){ctx.fillStyle="rgba(200,200,200,0.05)"; ctx.beginPath(); ctx.arc(Math.random()*canvas.width,Math.random()*canvas.height,100,0,Math.PI*2); ctx.fill(); } }
+  if(currentWeatherType==="sunny"){ for(let i=0;i<30;i++){const x=Math.random()*canvas.width,y=Math.random()*canvas.height/2,r=Math.random()*50+50; const gradient=ctx.createRadialGradient(x,y,0,x,y,r); gradient.addColorStop(0,"rgba(255,255,200,0.1)"); gradient.addColorStop(1,"rgba(255,255,200,0)"); ctx.fillStyle=gradient; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();} }
+  if(currentWeatherType==="night"||currentWeatherType==="clearnight"){ for(let i=0;i<50;i++){ ctx.fillStyle=`rgba(255,255,255,${Math.random()})`; ctx.beginPath(); ctx.arc(Math.random()*canvas.width,Math.random()*canvas.height/2,Math.random()*2,0,Math.PI*2); ctx.fill();} }
+  if(currentWeatherType==="lightning"){ if(Math.random()<0.01){ ctx.fillStyle="rgba(255,255,255,0.3)"; ctx.fillRect(0,0,canvas.width,canvas.height);} }
+  particles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(drawParticles);
+}
+
+// calculate weather based on time, no bamboozle
+function calculateWeather(){ const intervalMs=2*60*1000; const now=Date.now(); const index=Math.floor(now/intervalMs)%weatherSequence.length; return weatherSequence[index]; }
+
+// firebase timer sync, cause duh
+async function syncWeather(){ const docSnap=await getDoc(timerDoc); if(!docSnap.exists()) await setDoc(timerDoc,{startTimestamp:Date.now()}); }
+
+// apply new weather, ffs
+function applyWeather(weather){ if(currentWeatherType!==weather.type){ currentWeatherType=weather.type; document.body.style.background=weather.bg; weatherIcon.textContent=weather.icon; showWeatherAlert(`${weather.name} weather is now active!`); createParticles(currentWeatherType); drawParticles();}}
+
+// listen to firebase, can't trust users
+onSnapshot(timerDoc,()=>{ const weather=calculateWeather(); applyWeather(weather); });
+
+// tooltip, hover for pc, click for mobile, cause users are stupid
+function showWeatherName(){tooltip.textContent=weatherSequence.find(w=>w.type===currentWeatherType).name; tooltip.style.display="block";}
+function hideWeatherName(){tooltip.style.display="none";}
+weatherIcon.addEventListener('mouseenter', showWeatherName);
+weatherIcon.addEventListener('mouseleave', hideWeatherName);
+weatherIcon.addEventListener('click',()=>{if(window.innerWidth<768){tooltip.style.display=tooltip.style.display==="block"?"none":"block";}});
+
+// quotes for humans
+const quotes=["Great things take time.","Patience is the key to success.","Innovation is on its way.","Stay tuned for something amazing.","Good things are coming soon."];
+let quoteIndex=0; const quoteElement=document.getElementById('quote');
+function showQuote(){ quoteElement.style.opacity=0; setTimeout(()=>{quoteElement.textContent=quotes[quoteIndex]; quoteElement.style.opacity=1; quoteIndex=(quoteIndex+1)%quotes.length; },1000); }
+showQuote(); setInterval(showQuote,5000);
+
+// resize canvas, because mobile rotation
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight; createParticles(currentWeatherType);});
+
+// initial firebase sync, lol
+syncWeather();
+</script>
+</body>
+</html>
