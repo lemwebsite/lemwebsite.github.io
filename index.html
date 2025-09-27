@@ -1,546 +1,270 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>LEM - Coming Soon</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-/* reset & variables */
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --glass-bg:rgba(6,12,20,0.55);
-  --accent:#7b5cff;
-  --muted:#cbd5e1;
-  --card-radius:14px;
-  --max-width:1100px;
-  --header-h:64px;
-}
-html,body{height:100%}
-body{
-  font-family:'Poppins',sans-serif;
-  background:linear-gradient(180deg,#071423,#071a24);
-  color:#e6eef6;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  /* Allow normal scrolling on mobile and desktop */
-  overflow:auto;
-  -webkit-overflow-scrolling:touch;
-  line-height:1.3;
-}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LEM — Lux Editing Empire</title>
 
-/* fixed header */
-.header{
-  position:fixed;
-  left:12px;
-  right:12px;
-  top:12px;
-  height:var(--header-h);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:10px 14px;
-  z-index:20;
-  gap:12px;
-  pointer-events:auto;
-  backdrop-filter: blur(6px);
-}
-.brand{display:flex;align-items:center;gap:10px}
-.brand .avatar{
-  width:44px;height:44px;border-radius:10px;
-  background:linear-gradient(135deg,#0f1724,#10202b);
-  display:flex;align-items:center;justify-content:center;font-weight:700;
-  color:var(--accent);box-shadow:0 6px 20px rgba(11,20,30,0.6);
-  font-size:14px;
-}
-.brand div{line-height:1}
-.brand .name{font-weight:800;color:#e8f0ff;font-size:14px}
-.brand .tag{font-size:11px;color:rgba(255,255,255,0.6)}
+  <!-- Font Awesome for Discord icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-/* join button */
-.nav{display:flex;align-items:center;gap:12px}
-.join-btn{
-  background:linear-gradient(90deg,#6d5cff,#a17bff);
-  border-radius:10px;padding:8px 12px;color:white;font-weight:700;
-  box-shadow:0 6px 18px rgba(107,78,255,0.18);font-size:13px;
-}
+  <style>
+    :root{
+      --muted: #9fb9cc;
+      --accent-a: #5865F2;
+      --accent-b: #7B5CF0;
+      --radius: 12px;
+      --maxw: 1100px;
+      --shadow-strong: 0 28px 80px rgba(2,6,23,0.72);
+      --shadow-soft: 0 12px 36px rgba(2,6,23,0.6);
+      --brand-font: Arial, Helvetica, sans-serif;
+    }
 
-/* main wrapper sits below header so header doesn't overlap content */
-.main-wrapper{
-  width:100%;
-  max-width:var(--max-width);
-  margin:calc(var(--header-h) + 18px) auto 48px; /* space under header */
-  padding:18px;
-}
+    /* base reset */
+    *{box-sizing:border-box;}
+    html,body{
+      min-height:100vh;
+      margin:0;
+      font-family:var(--brand-font);
+      -webkit-font-smoothing:antialiased;
+      background: linear-gradient(180deg, #071522 0%, #041223 100%);
+      color: #eaf6ff;
+      overflow-x:hidden;
+      padding:36px 18px 80px;
+    }
+    a{color:inherit;text-decoration:none;}
 
-/* container uses natural height (no fixed vh). this prevents cut-off on desktop */
-.container{
-  position:relative;
-  z-index:6;
-  width:100%;
-  display:grid;
-  grid-template-columns: 1fr 340px;
-  gap:20px;
-  padding:22px;
-  border-radius:18px;
-  background:var(--glass-bg);
-  backdrop-filter:blur(10px);
-  box-shadow:0 20px 60px rgba(2,6,12,0.7);
-  overflow:visible; /* allow content to expand and the page to scroll */
-  min-height:180px;
-}
+    /* site container */
+    .site-wrap {
+      width:min(var(--maxw),96vw);
+      margin:0 auto;
+      border-radius:14px;
+      background: rgba(255, 255, 255, 0.005);
+      box-shadow: var(--shadow-strong);
+      border:1px solid rgba(255,255,255,0.02);
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+    }
 
-/* left column */
-.left{
-  padding:22px;border-radius:12px;
-  background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.02));
-  display:flex;flex-direction:column;gap:10px;min-width:0;
-}
-.logo{font-size:18px;font-weight:800;color:var(--accent);letter-spacing:1px;margin-bottom:4px}
-.title{font-size:clamp(24px,3.6vw,40px);font-weight:700;margin-bottom:6px;line-height:1.05}
-.desc{color:var(--muted);line-height:1.45;margin-bottom:6px;font-size:14px}
-.quote{font-style:italic;color:rgba(255,255,255,0.85);font-size:15px;min-height:22px;transition:opacity .35s}
-.footer-note{margin-top:6px;color:rgba(255,255,255,0.6);font-size:13px;word-break:break-all}
+    /* header */
+    header.top {
+      position: sticky;
+      top: 18px;
+      z-index: 40;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 18px;
+      gap:12px;
+      margin:16px;
+      border-radius:12px;
+      background: rgba(255,255,255,0.008);
+      border:1px solid rgba(255,255,255,0.02);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(6px) saturate(120%);
+    }
 
-/* right column (status etc.) */
-.right{
-  padding:14px;border-radius:12px;
-  background:linear-gradient(180deg,rgba(255,255,255,0.015),rgba(255,255,255,0.02));
-  display:flex;flex-direction:column;gap:12px;align-items:stretch;
-  min-width:0;
-  max-height:calc(100vh - var(--header-h) - 120px); /* avoid excessive height but allow scroll */
-  overflow:auto;
-}
-.card{padding:12px;border-radius:12px;background:rgba(0,0,0,0.25);box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
-.quick-title{font-weight:700;color:#eaf2ff;margin-bottom:6px;font-size:13px}
-.hotfixes li{color:var(--muted);margin:6px 0;font-size:13px}
-#statusText{color:var(--muted);font-size:13px;white-space:normal;word-break:break-word}
+    .brand { display:flex; align-items:center; gap:12px; }
+    .brand .logo {
+      width:56px;height:56;border-radius:10px;overflow:hidden;flex:0 0 56px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+      transition: transform .5s ease;
+    }
+    .brand .logo img{width:100%;height:100%;object-fit:cover;display:block;}
+    .brand:hover .logo { transform: translateY(-4px) scale(1.02); }
 
-/* weather widget & tooltip & alert */
-.weather{
-  position:fixed;right:18px;top:calc(var(--header-h) + 18px);font-size:28px;z-index:18;cursor:pointer;padding:8px;border-radius:10px;background:rgba(255,255,255,0.03);backdrop-filter:blur(6px);display:flex;align-items:center;gap:8px;box-shadow:0 8px 30px rgba(2,6,12,0.6)
-}
-.tooltip{position:fixed;right:18px;top:calc(var(--header-h) + 72px);background:rgba(0,0,0,0.65);padding:8px 10px;border-radius:8px;color:#fff;font-size:13px;display:none;z-index:19}
-.alert{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:linear-gradient(90deg,#ffd166,#ffb703);padding:10px 16px;border-radius:12px;color:#071423;font-weight:800;z-index:21;opacity:0;transition:opacity .4s}
+    .brand .text { display:flex;flex-direction:column;line-height:1; }
+    .brand .name { font-weight:800; font-size:18px; }
+    .brand .sub { font-size:12px; color:var(--muted); margin-top:2px; }
 
-/* canvas covers viewport background */
-canvas{position:fixed;left:0;top:0;width:100%;height:100%;z-index:0;pointer-events:none}
+    nav.links { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    nav.links .link {
+      padding:9px 12px; border-radius:10px; font-weight:700; color:var(--muted); transition: all .12s ease;
+    }
+    nav.links .link:hover { transform:translateY(-3px); color:#fff; background: rgba(255,255,255,0.02) }
+    nav.links .join {
+      padding:10px 14px; border-radius:10px; font-weight:800;
+      background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+      color:#04101a; box-shadow: 0 10px 30px rgba(88,101,242,0.12);
+    }
 
-/* responsive: stack columns on small screens and enable page scroll */
-@media(max-width:920px){
-  .container{grid-template-columns:1fr 300px}
-  .main-wrapper{margin:calc(var(--header-h) + 14px) auto 36px;padding:16px}
-  .weather{right:14px;top:calc(var(--header-h) + 14px)}
-  .tooltip{right:14px;top:calc(var(--header-h) + 64px)}
-}
-@media(max-width:720px){
-  .container{
-    grid-template-columns:1fr;
-    gap:12px;
-    padding:14px;
-  }
-  .right{
-    max-height:none;
-    overflow:visible;
-    order:2;
-    display:block;
-  }
-  .left{order:1;padding:16px}
-  .weather{top:auto;bottom:18px;right:12px;font-size:22px}
-  .tooltip{display:none}
-  .main-wrapper{margin:calc(var(--header-h) + 12px) 12px 28px;padding:12px}
-}
+    /* hero */
+    .hero {
+      margin:22px 26px;
+      padding:40px 36px;
+      border-radius:12px;
+      background: rgba(255,255,255,0.008);
+      border:1px solid rgba(255,255,255,0.02);
+      box-shadow: var(--shadow-soft);
+      text-align:center;
+    }
+    .hero h1 { margin:0; font-size:34px; letter-spacing:0.2px }
+    .hero p { margin:12px auto 0; color:var(--muted); max-width:68ch; font-size:15px; line-height:1.6 }
+    .hero .cta {
+      margin-top:20px; display:inline-flex; align-items:center; gap:12px; padding:14px 24px; border-radius:12px;
+      background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+      color:#04101a; font-weight:900; font-size:18px; box-shadow: 0 22px 70px rgba(88,101,242,0.18);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .hero .cta:active { transform: translateY(1px); }
+    .hero .hint { margin-top:12px; color:var(--muted); font-size:13px }
 
-/* small height adjustments */
-@media(max-height:560px){
-  .main-wrapper{margin-top:calc(var(--header-h) + 8px)}
-}
-</style>
+    /* content area */
+    .content {
+      display:grid;
+      grid-template-columns: 1fr 360px;
+      gap:22px;
+      padding:18px 26px 28px;
+    }
+    .left { padding-right:8px; }
+    .about-title { font-weight:800; font-size:16px; margin-bottom:8px; }
+    .about-text { color:var(--muted); font-size:14px; line-height:1.6; }
+
+    /* right panel */
+    .panel {
+      border-radius:12px; padding:18px; background: rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02); box-shadow: var(--shadow-soft);
+      text-align:center;
+    }
+    .panel .title { font-weight:800; font-size:16px; margin-bottom:8px; }
+    .panel .preview { height:160px; border-radius:10px; background: linear-gradient(135deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02)); display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:800; margin-bottom:12px; }
+    .panel .small { color:var(--muted); font-size:13px; }
+
+    /* footer */
+    .footer { padding:18px 26px; border-top:1px solid rgba(255,255,255,0.02); text-align:center; color:var(--muted); font-size:13px; }
+
+    /* modal */
+    .modal-backdrop { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(3,7,15,0.78); z-index:120; padding:20px; }
+    .modal {
+      width:min(720px,96vw); max-height:86vh; overflow:auto; border-radius:12px; padding:18px;
+      background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02);
+      box-shadow: var(--shadow-strong);
+    }
+    .modal h3 { margin:0 0 8px 0; font-size:18px; }
+    .modal .body { color:var(--muted); font-size:15px; line-height:1.6; }
+    .modal .actions { margin-top:16px; display:flex; gap:10px; justify-content:flex-end; align-items:center; flex-wrap:wrap; }
+    .btn { padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; }
+    .btn.join { background: linear-gradient(90deg,var(--accent-a),var(--accent-b)); color:#04101a; box-shadow: 0 10px 30px rgba(88,101,242,0.12); }
+    .btn.ok { background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--muted); }
+
+    /* responsive */
+    @media (max-width:1000px) {
+      .content { grid-template-columns: 1fr; padding:18px; }
+      .panel { order:2; }
+      .left { order:1; }
+      header.top { margin:10px; }
+    }
+    @media (max-width:520px) {
+      .hero h1 { font-size:28px; }
+      .brand .name { font-size:16px; }
+      .brand .sub { display:none; }
+      .brand .logo { width:48px; height:48px; }
+      .hero p, .about-text { font-size:14px; }
+      .panel .preview { height:140px; }
+    }
+  </style>
 </head>
 <body>
-<header class="header" role="banner">
-  <div class="brand">
-    <div class="avatar">LEM</div>
-    <div>
-      <div class="name">LEM</div>
-      <div class="tag">Lux Editing Empire</div>
-    </div>
-  </div>
-  <nav class="nav" role="navigation" aria-label="Primary">
-    <div class="join-btn" id="joinHeader">Join</div>
-  </nav>
-</header>
+  <div class="site-wrap" role="application" aria-labelledby="siteTitle">
 
-<canvas id="weatherCanvas"></canvas>
-
-<div class="weather" id="weatherIcon" aria-hidden="true">☀️ <span id="weatherLabel" style="font-size:13px;color:rgba(255,255,255,0.85);font-weight:700">Sunny</span></div>
-<div class="tooltip" id="weatherTooltip"></div>
-<div class="alert" id="weatherAlert"></div>
-
-<!-- wrapper ensures header doesn't overlap -->
-<div class="main-wrapper">
-  <main class="container" role="main" aria-label="Coming soon content">
-    <section class="left">
-      <div class="logo">LEM</div>
-      <h1 class="title">Coming Soon</h1>
-      <p class="desc">Lux Editing Empire Website is launching soon. Stay tuned for scenepacks, transitions, and color grades for editors. Join our Discord for previews and drops.</p>
-      <div class="quote" id="quote"></div>
-      <div class="footer-note">Invite link: https://discord.gg/H6y5cuck</div>
-    </section>
-
-    <aside class="right" aria-label="Quick access and status">
-      <div class="card">
-        <div class="quick-title">Quick access</div>
-        <div style="margin-top:6px;color:var(--muted)">Join the server for announcement drops and previews. You will get a notice when anything drops.</div>
-        <div style="margin-top:10px;display:flex;justify-content:flex-end">
-          <div class="join-btn" style="font-size:13px" id="joinAside">Join Discord</div>
+    <!-- header -->
+    <header class="top" role="banner" aria-label="Main header">
+      <div class="brand" aria-hidden="false">
+        <div class="logo" aria-hidden="true">
+          <img src="https://media.discordapp.net/attachments/1392119231000219690/1412979398478528612/IMG_7390.png?ex=68d5f29c&is=68d4a11c&hm=5521d06927ad69d9d4be10bf6085543fd91cefb3bdf20cb6b971b5e12158f0cc&=&format=webp&quality=lossless&width=527&height=527" alt="LEM logo">
+        </div>
+        <div class="text">
+          <div class="name">LEM</div>
+          <div class="sub">Lux Editing Empire</div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="quick-title">Hot fixes</div>
-        <ul class="hotfixes">
-          <li>Realtime weather updates without refresh</li>
-          <li>Single animation loop to avoid double rendering</li>
-          <li>Particle performance improvements</li>
-        </ul>
+      <nav class="links" role="navigation" aria-label="Top links">
+        <a href="#" class="link" id="linkScenepacks">scenepacks</a>
+        <a href="#" class="link" id="linkResources">resources</a>
+        <a href="https://discord.gg/H6y5cuck" class="join" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Join</a>
+      </nav>
+    </header>
+
+    <!-- hero -->
+    <section class="hero" role="main" aria-labelledby="siteTitle">
+      <h1 id="siteTitle">LEM</h1>
+      <p>We make scenepacks, transitions and color grades for editors. The packs will be released soon. Join our Discord to get updates and early access.</p>
+
+      <a class="cta" href="https://discord.gg/H6y5cuck" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Join Discord</a>
+
+      <div class="hint">Invite link: <code style="background:transparent;color:var(--muted)">https://discord.gg/H6y5cuck</code></div>
+    </section>
+
+    <!-- content -->
+    <section class="content" aria-label="Content area">
+      <div class="left">
+        <div class="about-title">About</div>
+        <div class="about-text">
+          LEM is a community for people who edit. We share scenepacks, presets and guides. Packs will be released in drops. Join our Discord to be first to know.
+        </div>
       </div>
 
-      <div class="card" style="display:flex;flex-direction:column;gap:8px">
-        <div class="quick-title">Status</div>
-        <div id="statusText" style="color:var(--muted)">Connecting to realtime service... (status will appear here and will wrap if long)</div>
+      <aside class="panel" aria-label="Quick actions">
+        <div class="title">Quick access</div>
+        <div class="preview">Join the server for announcement drops and previews</div>
+        <div class="small" style="color:var(--muted);margin-top:10px">You will get a notice when anything drops.</div>
+        <div style="margin-top:14px">
+          <a class="btn join" href="https://discord.gg/H6y5cuck" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Join Discord</a>
+        </div>
+      </aside>
+    </section>
+
+    <div class="footer">Scenepacks and resources will open soon. Join the Discord for updates.</div>
+  </div>
+
+  <!-- modal -->
+  <div class="modal-backdrop" id="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" role="document" aria-live="polite">
+      <h3 id="modalTitle">Coming soon</h3>
+      <div class="body" id="modalBody"></div>
+
+      <div class="actions">
+        <button class="btn join" id="modalJoin"><i class="fa-brands fa-discord"></i> Join Discord</button>
+        <button class="btn ok" id="modalOkay">Okay</button>
       </div>
-    </aside>
-  </main>
-</div>
+    </div>
+  </div>
 
-<script type="module">
-/* Weather + Firestore logic kept, with responsive DPR cap and particle caps.
-   No functional change to behavior except to adapt to the layout changes above. */
+  <script>
+    const modal = document.getElementById('modal');
+    const modalBody = document.getElementById('modalBody');
+    const modalOkay = document.getElementById('modalOkay');
+    const modalJoin = document.getElementById('modalJoin');
+    const linkScenepacks = document.getElementById('linkScenepacks');
+    const linkResources = document.getElementById('linkResources');
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey:"AIzaSyDcEx1uATbZfPk_hD0IF3bEkEGQc6bbq3g",
-  authDomain:"nooble-forum.firebaseapp.com",
-  projectId:"nooble-forum",
-  storageBucket:"nooble-forum.firebasestorage.app",
-  messagingSenderId:"395619682731",
-  appId:"1:395619682731:web:d43f0f8fc934082a74aaee",
-  measurementId:"G-CYKP79D8Z7"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const timerDoc = doc(db, "weather", "timer");
-
-const weatherSequence = [
-  {name:"Sunny", icon:"☀️", bg:"linear-gradient(135deg,#f6d365,#fda085)", type:"sunny"},
-  {name:"Rain", icon:"🌧️", bg:"linear-gradient(135deg,#3a7bd5,#00d2ff)", type:"rain"},
-  {name:"Drizzle", icon:"🌦️", bg:"linear-gradient(135deg,#a1c4fd,#c2e9fb)", type:"drizzle"},
-  {name:"Snow", icon:"❄️", bg:"linear-gradient(135deg,#e0eafc,#cfdef3)", type:"snow"},
-  {name:"Heavy Snow", icon:"🌨️", bg:"linear-gradient(135deg,#dbe6f1,#b0c4de)", type:"heavysnow"},
-  {name:"Storm", icon:"🌩️", bg:"linear-gradient(135deg,#2c3e50,#4ca1af)", type:"storm"},
-  {name:"Thunderstorm", icon:"⛈️", bg:"linear-gradient(135deg,#1f1c2c,#928dab)", type:"thunderstorm"},
-  {name:"Fog", icon:"🌫️", bg:"linear-gradient(135deg,#a8a8a8,#d3d3d3)", type:"fog"},
-  {name:"Windy", icon:"💨", bg:"linear-gradient(135deg,#89f7fe,#66a6ff)", type:"windy"},
-  {name:"Cloudy", icon:"☁️", bg:"linear-gradient(135deg,#bdc3c7,#2c3e50)", type:"cloudy"},
-  {name:"Autumn Leaves", icon:"🍂", bg:"linear-gradient(135deg,#ff9966,#ff5e62)", type:"leaves"},
-  {name:"Night", icon:"🌙", bg:"linear-gradient(135deg,#0f2027,#203a43,#2c5364)", type:"night"},
-  {name:"Lightning", icon:"⚡", bg:"linear-gradient(135deg,#1c92d2,#f2fcfe)", type:"lightning"},
-  {name:"Hail", icon:"🌨️", bg:"linear-gradient(135deg,#c0c0c0,#e0e0e0)", type:"hail"},
-  {name:"Clear Night", icon:"🌌", bg:"linear-gradient(135deg,#000428,#004e92)", type:"clearnight"}
-];
-
-const canvas = document.getElementById('weatherCanvas');
-const ctx = canvas.getContext('2d');
-
-let DPR = Math.max(1, window.devicePixelRatio || 1);
-function resizeCanvas(){
-  // cap DPR for performance on low-end devices
-  DPR = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
-  canvas.width = Math.floor(window.innerWidth * DPR);
-  canvas.height = Math.floor(window.innerHeight * DPR);
-  canvas.style.width = window.innerWidth + "px";
-  canvas.style.height = window.innerHeight + "px";
-  ctx.setTransform(DPR,0,0,DPR,0,0);
-}
-resizeCanvas();
-
-const weatherIcon = document.getElementById('weatherIcon');
-const weatherLabel = document.getElementById('weatherLabel');
-const tooltip = document.getElementById('weatherTooltip');
-const alertBox = document.getElementById('weatherAlert');
-const quoteElement = document.getElementById('quote');
-const statusText = document.getElementById('statusText');
-
-let currentWeatherType = "sunny";
-let particles = [];
-let animRunning = false;
-let animationId = null;
-
-function showWeatherAlert(message){
-  alertBox.textContent = message;
-  alertBox.style.opacity = "1";
-  setTimeout(()=>{ alertBox.style.opacity = "0"; },2600);
-}
-
-class Particle {
-  constructor(type){
-    this.type = type;
-    this.reset();
-  }
-  reset(){
-    this.x = Math.random() * window.innerWidth;
-    this.y = Math.random() * window.innerHeight;
-    this.size = Math.random() * 3 + 1;
-    this.speedX = (Math.random() - 0.5) * (this.type === "windy" ? 4 : 1);
-    this.speedY = Math.random() * 3 + 0.5;
-    this.angle = Math.random() * Math.PI * 2;
-    this.alpha = Math.random() * 0.8 + 0.2;
-  }
-  update(){
-    switch(this.type){
-      case "rain":
-      case "drizzle":
-      case "storm":
-      case "thunderstorm":
-        this.y += this.speedY * 4;
-        this.x += this.speedX * 2;
-        if(this.y > window.innerHeight) this.reset();
-        break;
-      case "snow":
-      case "heavysnow":
-        this.y += this.speedY;
-        this.x += Math.sin(this.angle) * 0.5;
-        this.angle += 0.01;
-        if(this.y > window.innerHeight) this.reset();
-        break;
-      case "windy":
-        this.x += this.speedX * 3;
-        this.y += this.speedY * 0.2;
-        if(this.x > window.innerWidth || this.x < 0) this.reset();
-        break;
-      case "leaves":
-        this.x += Math.sin(this.angle) * 2;
-        this.y += Math.cos(this.angle) * 2;
-        this.angle += 0.02;
-        if(this.y > window.innerHeight) this.reset();
-        break;
-      default:
-        this.y += this.speedY * 0.2;
-        if(this.y > window.innerHeight) this.reset();
+    function openModal(kind) {
+      const which = kind === 'scenepacks' ? 'Scenepacks' : 'Resources';
+      modalBody.innerHTML = `
+        <p style="margin:0 0 8px 0">We do not know exactly when but the ${which} will be open soon.</p>
+        <p style="margin:0;color:${getComputedStyle(document.documentElement).getPropertyValue('--muted')};">Join our Discord for updates and early access.</p>
+      `;
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden','false');
+      modalOkay.focus();
     }
-  }
-  draw(){
-    ctx.save();
-    switch(this.type){
-      case "rain":
-      case "drizzle":
-      case "storm":
-      case "thunderstorm":
-        ctx.strokeStyle = `rgba(174,194,224,${this.alpha})`;
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x + this.speedX * 2, this.y + this.speedY * 4);
-        ctx.stroke();
-        break;
-      case "snow":
-      case "heavysnow":
-        ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        break;
-      case "windy":
-        ctx.strokeStyle = `rgba(255,255,255,${this.alpha})`;
-        ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x + this.speedX * 5, this.y + this.speedY * 2);
-        ctx.stroke();
-        break;
-      case "leaves":
-        ctx.font = "18px Arial";
-        ctx.fillText("🍂", this.x, this.y);
-        break;
-      default:
-        ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
+
+    function closeModal() {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden','true');
     }
-    ctx.restore();
-  }
-}
 
-function createParticles(type){
-  particles = [];
-  const area = window.innerWidth * window.innerHeight;
-  const density = Math.max(0.08, Math.min(0.35, area / (1000000)));
-  let baseCount = Math.round(200 * density);
-  let count = baseCount;
-  switch(type){
-    case "rain": count = Math.round(baseCount * 1.6); break;
-    case "drizzle": count = Math.round(baseCount * 1.0); break;
-    case "snow": count = Math.round(baseCount * 1.2); break;
-    case "heavysnow": count = Math.round(baseCount * 1.4); break;
-    case "storm": count = Math.round(baseCount * 1.3); break;
-    case "thunderstorm": count = Math.round(baseCount * 1.5); break;
-    case "fog": count = Math.round(baseCount * 0.6); break;
-    case "windy": count = Math.round(baseCount * 0.6); break;
-    case "leaves": count = Math.round(baseCount * 0.9); break;
-    case "hail": count = Math.round(baseCount * 1.1); break;
-    case "sunny": count = Math.round(baseCount * 0.35); break;
-    case "cloudy": count = Math.round(baseCount * 0.45); break;
-  }
-  const cap = window.innerWidth < 600 ? 260 : 900;
-  count = Math.min(count, cap);
-  for(let i=0;i<count;i++) particles.push(new Particle(type));
-}
+    linkScenepacks && linkScenepacks.addEventListener('click', (e) => { e.preventDefault(); openModal('scenepacks'); });
+    linkResources && linkResources.addEventListener('click', (e) => { e.preventDefault(); openModal('resources'); });
 
-function drawParticlesOnce(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  if(currentWeatherType === "fog"){
-    for(let i=0;i<30;i++){
-      ctx.fillStyle = "rgba(200,200,200,0.05)";
-      ctx.beginPath();
-      ctx.arc(Math.random() * window.innerWidth, Math.random() * window.innerHeight, 80, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-  if(currentWeatherType === "sunny"){
-    for(let i=0;i<20;i++){
-      const x = Math.random() * window.innerWidth;
-      const y = Math.random() * window.innerHeight / 2;
-      const r = Math.random() * 50 + 40;
-      const gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
-      gradient.addColorStop(0, "rgba(255,255,200,0.06)");
-      gradient.addColorStop(1, "rgba(255,255,200,0)");
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-  if(currentWeatherType === "night" || currentWeatherType === "clearnight"){
-    for(let i=0;i<30;i++){
-      ctx.fillStyle = `rgba(255,255,255,${Math.random()})`;
-      ctx.beginPath();
-      ctx.arc(Math.random() * window.innerWidth, Math.random() * window.innerHeight / 2, Math.random() * 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-  if(currentWeatherType === "lightning" && Math.random() < 0.01){
-    ctx.fillStyle = "rgba(255,255,255,0.28)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-  }
-  for(const p of particles){ p.update(); p.draw(); }
-}
+    modalOkay && modalOkay.addEventListener('click', closeModal);
+    modalJoin && modalJoin.addEventListener('click', () => {
+      window.open('https://discord.gg/H6y5cuck', '_blank', 'noopener');
+    });
 
-function animate(){
-  drawParticlesOnce();
-  animationId = requestAnimationFrame(animate);
-}
-function startAnimation(){ if(!animRunning){ animRunning = true; animate(); } }
-function stopAnimation(){ if(animRunning){ cancelAnimationFrame(animationId); animRunning = false; } }
-
-function applyWeather(weather){
-  if(!weather) return;
-  if(currentWeatherType !== weather.type){
-    currentWeatherType = weather.type;
-    document.body.style.background = weather.bg;
-    weatherIcon.firstChild.nodeValue = weather.icon + " ";
-    weatherLabel.textContent = weather.name;
-    showWeatherAlert(`${weather.name} is active`);
-    createParticles(currentWeatherType);
-    startAnimation();
-  } else {
-    weatherLabel.textContent = weather.name;
-  }
-}
-
-async function ensureTimerDoc(){
-  try{
-    const snap = await getDoc(timerDoc);
-    if(!snap.exists()){
-      await setDoc(timerDoc, { startTimestamp: Date.now(), intervalMs: 120000, offset: 0 });
-    }
-  }catch(e){
-    statusText.textContent = "Failed to initialize realtime service";
-  }
-}
-
-function computeWeatherFromDocData(data){
-  const start = Number(data?.startTimestamp) || Date.now();
-  const intervalMs = Number(data?.intervalMs) || 120000;
-  const offset = Number(data?.offset) || 0;
-  const now = Date.now();
-  const index = Math.floor((now - start + offset) / intervalMs) % weatherSequence.length;
-  const safeIndex = ((index % weatherSequence.length) + weatherSequence.length) % weatherSequence.length;
-  return weatherSequence[safeIndex];
-}
-
-function attachRealtimeListener(){
-  onSnapshot(timerDoc, (snap) => {
-    const data = snap.exists() ? snap.data() : null;
-    const weather = computeWeatherFromDocData(data || {});
-    applyWeather(weather);
-    statusText.textContent = "Connected · realtime updates enabled";
-  }, (err) => {
-    statusText.textContent = "Realtime listener error";
-  });
-}
-
-/* resize handling */
-window.addEventListener('resize', ()=>{
-  resizeCanvas();
-  createParticles(currentWeatherType);
-});
-
-/* tooltip behavior */
-function setupTooltipBehavior(){
-  function showName(){
-    const name = weatherSequence.find(w=>w.type===currentWeatherType)?.name || "";
-    tooltip.textContent = name;
-    tooltip.style.display = 'block';
-  }
-  function hideName(){ tooltip.style.display = 'none'; }
-  const weatherEl = document.getElementById('weatherIcon');
-  weatherEl.addEventListener('mouseenter', showName);
-  weatherEl.addEventListener('mouseleave', hideName);
-  weatherEl.addEventListener('click', ()=>{
-    if(window.innerWidth < 768) tooltip.style.display = tooltip.style.display === 'block' ? 'none' : 'block';
-  });
-}
-setupTooltipBehavior();
-
-/* rotating quotes */
-const quotes = ["Great things take time.","Patience is the key to success.","Innovation is on its way.","Stay tuned for something amazing.","Good things are coming soon."];
-let quoteIndex = 0;
-function showQuote(){
-  quoteElement.style.opacity = '0';
-  setTimeout(()=>{
-    quoteElement.textContent = quotes[quoteIndex];
-    quoteElement.style.opacity = '1';
-    quoteIndex = (quoteIndex + 1) % quotes.length;
-  }, 400);
-}
-showQuote();
-setInterval(showQuote, 5000);
-
-/* init */
-(async function init(){
-  await ensureTimerDoc();
-  attachRealtimeListener();
-  createParticles(currentWeatherType);
-  startAnimation();
-})();
-
-/* optional: wire join button to discord (keeps UX tidy) */
-document.getElementById('joinHeader').addEventListener('click', ()=>{ window.open('https://discord.gg/H6y5cuck','_blank'); });
-document.getElementById('joinAside').addEventListener('click', ()=>{ window.open('https://discord.gg/H6y5cuck','_blank'); });
-</script>
+    modal.addEventListener('click', (e) => { e.stopPropagation(); });
+    document.addEventListener('keydown', (e) => { if (e.key==='Escape' && modal.style.display==='flex'){e.preventDefault();} });
+  </script>
 </body>
 </html>
