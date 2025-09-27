@@ -4,267 +4,119 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>LEM — Lux Editing Empire</title>
-
-  <!-- Font Awesome for Discord icon -->
+  <link rel="icon" type="image/webp" href="https://github.com/lemwebsite/lemwebsite.github.io/blob/main/IMG_7390.webp?raw=true">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <style>
     :root{
-      --muted: #9fb9cc;
-      --accent-a: #5865F2;
-      --accent-b: #7B5CF0;
-      --radius: 12px;
-      --maxw: 1100px;
-      --shadow-strong: 0 28px 80px rgba(2,6,23,0.72);
-      --shadow-soft: 0 12px 36px rgba(2,6,23,0.6);
-      --brand-font: Arial, Helvetica, sans-serif;
+      --muted:#9fb9cc;--accent-a:#5865F2;--accent-b:#7B5CF0;--radius:12px;--maxw:1100px;--shadow-strong:0 28px 80px rgba(2,6,23,0.72);--shadow-soft:0 12px 36px rgba(2,6,23,0.6);--brand-font:Arial,Helvetica,sans-serif;
     }
-
-    /* base reset */
-    *{box-sizing:border-box;}
-    html,body{
-      min-height:100vh;
-      margin:0;
-      font-family:var(--brand-font);
-      -webkit-font-smoothing:antialiased;
-      background: linear-gradient(180deg, #071522 0%, #041223 100%);
-      color: #eaf6ff;
-      overflow-x:hidden;
-      padding:36px 18px 80px;
-    }
-    a{color:inherit;text-decoration:none;}
-
-    /* site container */
-    .site-wrap {
-      width:min(var(--maxw),96vw);
-      margin:0 auto;
-      border-radius:14px;
-      background: rgba(255, 255, 255, 0.005);
-      box-shadow: var(--shadow-strong);
-      border:1px solid rgba(255,255,255,0.02);
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-    }
-
-    /* header */
-    header.top {
-      position: sticky;
-      top: 18px;
-      z-index: 40;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:12px 18px;
-      gap:12px;
-      margin:16px;
-      border-radius:12px;
-      background: rgba(255,255,255,0.008);
-      border:1px solid rgba(255,255,255,0.02);
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(6px) saturate(120%);
-    }
-
-    .brand { display:flex; align-items:center; gap:12px; }
-    .brand .logo {
-      width:56px;height:56;border-radius:10px;overflow:hidden;flex:0 0 56px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
-      transition: transform .5s ease;
-    }
-    .brand .logo img{width:100%;height:100%;object-fit:cover;display:block;}
-    .brand:hover .logo { transform: translateY(-4px) scale(1.02); }
-
-    .brand .text { display:flex;flex-direction:column;line-height:1; }
-    .brand .name { font-weight:800; font-size:18px; }
-    .brand .sub { font-size:12px; color:var(--muted); margin-top:2px; }
-
-    nav.links { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-    nav.links .link {
-      padding:9px 12px; border-radius:10px; font-weight:700; color:var(--muted); transition: all .12s ease;
-    }
-    nav.links .link:hover { transform:translateY(-3px); color:#fff; background: rgba(255,255,255,0.02) }
-    nav.links .join {
-      padding:10px 14px; border-radius:10px; font-weight:800;
-      background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
-      color:#04101a; box-shadow: 0 10px 30px rgba(88,101,242,0.12);
-    }
-
-    /* hero */
-    .hero {
-      margin:22px 26px;
-      padding:40px 36px;
-      border-radius:12px;
-      background: rgba(255,255,255,0.008);
-      border:1px solid rgba(255,255,255,0.02);
-      box-shadow: var(--shadow-soft);
-      text-align:center;
-    }
-    .hero h1 { margin:0; font-size:34px; letter-spacing:0.2px }
-    .hero p { margin:12px auto 0; color:var(--muted); max-width:68ch; font-size:15px; line-height:1.6 }
-    .hero .cta {
-      margin-top:20px; display:inline-flex; align-items:center; gap:12px; padding:14px 24px; border-radius:12px;
-      background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
-      color:#04101a; font-weight:900; font-size:18px; box-shadow: 0 22px 70px rgba(88,101,242,0.18);
-      transition: transform .12s ease, box-shadow .12s ease;
-    }
-    .hero .cta:active { transform: translateY(1px); }
-    .hero .hint { margin-top:12px; color:var(--muted); font-size:13px }
-
-    /* content area */
-    .content {
-      display:grid;
-      grid-template-columns: 1fr 360px;
-      gap:22px;
-      padding:18px 26px 28px;
-    }
-    .left { padding-right:8px; }
-    .about-title { font-weight:800; font-size:16px; margin-bottom:8px; }
-    .about-text { color:var(--muted); font-size:14px; line-height:1.6; }
-
-    /* right panel */
-    .panel {
-      border-radius:12px; padding:18px; background: rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.02); box-shadow: var(--shadow-soft);
-      text-align:center;
-    }
-    .panel .title { font-weight:800; font-size:16px; margin-bottom:8px; }
-    .panel .preview { height:160px; border-radius:10px; background: linear-gradient(135deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02)); display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:800; margin-bottom:12px; }
-    .panel .small { color:var(--muted); font-size:13px; }
-
-    /* footer */
-    .footer { padding:18px 26px; border-top:1px solid rgba(255,255,255,0.02); text-align:center; color:var(--muted); font-size:13px; }
-
-    /* modal */
-    .modal-backdrop { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(3,7,15,0.78); z-index:120; padding:20px; }
-    .modal {
-      width:min(720px,96vw); max-height:86vh; overflow:auto; border-radius:12px; padding:18px;
-      background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02);
-      box-shadow: var(--shadow-strong);
-    }
-    .modal h3 { margin:0 0 8px 0; font-size:18px; }
-    .modal .body { color:var(--muted); font-size:15px; line-height:1.6; }
-    .modal .actions { margin-top:16px; display:flex; gap:10px; justify-content:flex-end; align-items:center; flex-wrap:wrap; }
-    .btn { padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; }
-    .btn.join { background: linear-gradient(90deg,var(--accent-a),var(--accent-b)); color:#04101a; box-shadow: 0 10px 30px rgba(88,101,242,0.12); }
-    .btn.ok { background:transparent; border:1px solid rgba(255,255,255,0.03); color:var(--muted); }
-
-    /* responsive */
-    @media (max-width:1000px) {
-      .content { grid-template-columns: 1fr; padding:18px; }
-      .panel { order:2; }
-      .left { order:1; }
-      header.top { margin:10px; }
-    }
-    @media (max-width:520px) {
-      .hero h1 { font-size:28px; }
-      .brand .name { font-size:16px; }
-      .brand .sub { display:none; }
-      .brand .logo { width:48px; height:48px; }
-      .hero p, .about-text { font-size:14px; }
-      .panel .preview { height:140px; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;font-family:var(--brand-font);-webkit-font-smoothing:antialiased;background:linear-gradient(180deg,#071522 0%,#041223 100%);color:#eaf6ff;overflow-x:hidden;padding:36px 18px 80px;}
+    a{color:inherit;text-decoration:none}
+    .site-wrap{width:min(var(--maxw),96vw);margin:0 auto;border-radius:14px;background:rgba(255,255,255,0.005);box-shadow:var(--shadow-strong);border:1px solid rgba(255,255,255,0.02);overflow:hidden;display:flex;flex-direction:column}
+    header.top{position:sticky;top:18px;z-index:40;display:flex;align-items:center;justify-content:space-between;padding:12px 18px;gap:12px;margin:16px;border-radius:12px;background:rgba(255,255,255,0.008);border:1px solid rgba(255,255,255,0.02);box-shadow:var(--shadow-soft);backdrop-filter:blur(6px) saturate(120%)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand .logo{width:56px;height:56px;border-radius:10px;overflow:hidden;flex:0 0 56px;box-shadow:0 8px 28px rgba(0,0,0,0.45);transition:transform .5s ease}
+    .brand .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .brand:hover .logo{transform:translateY(-4px) scale(1.02)}
+    .brand .text{display:flex;flex-direction:column;line-height:1}
+    .brand .name{font-weight:800;font-size:18px}
+    .brand .sub{font-size:12px;color:var(--muted);margin-top:2px}
+    nav.links{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    nav.links .link{padding:9px 12px;border-radius:10px;font-weight:700;color:var(--muted);transition:all .12s ease}
+    nav.links .link:hover{transform:translateY(-3px);color:#fff;background:rgba(255,255,255,0.02)}
+    nav.links .join{padding:10px 14px;border-radius:10px;font-weight:800;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#04101a;box-shadow:0 10px 30px rgba(88,101,242,0.12)}
+    .hero{margin:22px 26px;padding:40px 36px;border-radius:12px;background:rgba(255,255,255,0.008);border:1px solid rgba(255,255,255,0.02);box-shadow:var(--shadow-soft);text-align:center}
+    .hero h1{margin:0;font-size:34px;letter-spacing:.2px}
+    .hero p{margin:12px auto 0;color:var(--muted);max-width:68ch;font-size:15px;line-height:1.6}
+    .hero .cta-group{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+    .hero .cta{display:inline-flex;align-items:center;gap:12px;padding:14px 24px;border-radius:12px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#04101a;font-weight:900;font-size:18px;box-shadow:0 22px 70px rgba(88,101,242,0.18);transition:transform .12s ease,box-shadow .12s ease}
+    .hero .cta:active{transform:translateY(1px)}
+    .hero .hint{margin-top:12px;color:var(--muted);font-size:13px}
+    .content{padding:18px 26px 28px}
+    .about-title{font-weight:800;font-size:16px;margin-bottom:8px;text-align:center}
+    .about-text{color:var(--muted);font-size:14px;line-height:1.6;text-align:center;max-width:70ch;margin:0 auto}
+    .footer{padding:18px 26px;border-top:1px solid rgba(255,255,255,0.02);text-align:center;color:var(--muted);font-size:13px}
+    .modal-backdrop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#0b0f1a;z-index:120;padding:20px}
+    .modal{width:min(720px,96vw);max-height:86vh;overflow:auto;border-radius:12px;padding:22px;background:rgba(15,20,35,0.96);border:1px solid rgba(255,255,255,0.05);box-shadow:var(--shadow-strong);text-align:center}
+    .modal h3{margin:0 0 12px 0;font-size:20px}
+    .modal .body{color:var(--muted);font-size:15px;line-height:1.6;margin-bottom:16px}
+    .modal .actions{margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{padding:10px 16px;border-radius:10px;font-weight:800;cursor:pointer}
+    .btn.join{background:linear-gradient(90deg,var(--accent-a),var(--accent-b));color:#04101a;box-shadow:0 10px 30px rgba(88,101,242,0.12)}
+    .btn.ok{background:transparent;border:1px solid rgba(255,255,255,0.08);color:var(--muted)}
+    @media(max-width:720px){
+      .hero{padding:28px 20px;margin:18px}
+      .hero h1{font-size:26px}
+      .hero p{font-size:14px}
+      .hero .cta{font-size:16px;padding:12px 20px}
+      .about-title{font-size:15px}
+      .about-text{font-size:13px}
     }
   </style>
 </head>
 <body>
   <div class="site-wrap" role="application" aria-labelledby="siteTitle">
-
-    <!-- header -->
     <header class="top" role="banner" aria-label="Main header">
-      <div class="brand" aria-hidden="false">
-        <div class="logo" aria-hidden="true">
-          <img src="https://media.discordapp.net/attachments/1392119231000219690/1412979398478528612/IMG_7390.png?ex=68d5f29c&is=68d4a11c&hm=5521d06927ad69d9d4be10bf6085543fd91cefb3bdf20cb6b971b5e12158f0cc&=&format=webp&quality=lossless&width=527&height=527" alt="LEM logo">
-        </div>
-        <div class="text">
-          <div class="name">LEM</div>
-          <div class="sub">Lux Editing Empire</div>
-        </div>
+      <div class="brand">
+        <div class="logo"><img src="https://github.com/lemwebsite/lemwebsite.github.io/blob/main/IMG_7390.webp?raw=true" alt="LEM logo"></div>
+        <div class="text"><div class="name">LEM</div><div class="sub">Lux Editing Empire</div></div>
       </div>
-
-      <nav class="links" role="navigation" aria-label="Top links">
+      <nav class="links">
         <a href="#" class="link" id="linkScenepacks">scenepacks</a>
         <a href="#" class="link" id="linkResources">resources</a>
         <a href="https://discord.gg/H6y5cuck" class="join" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Join</a>
       </nav>
     </header>
-
-    <!-- hero -->
-    <section class="hero" role="main" aria-labelledby="siteTitle">
+    <section class="hero">
       <h1 id="siteTitle">LEM</h1>
       <p>We make scenepacks, transitions and color grades for editors. The packs will be released soon. Join our Discord to get updates and early access.</p>
-
-      <a class="cta" href="https://discord.gg/H6y5cuck" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Join Discord</a>
-
+      <div class="cta-group">
+        <a class="cta" href="https://discord.gg/H6y5cuck" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Join Discord</a>
+        <a class="cta" href="#" id="heroScenepacks">Scenepacks</a>
+        <a class="cta" href="#" id="heroResources">Resources</a>
+      </div>
       <div class="hint">Invite link: <code style="background:transparent;color:var(--muted)">https://discord.gg/H6y5cuck</code></div>
     </section>
-
-    <!-- content -->
-    <section class="content" aria-label="Content area">
-      <div class="left">
-        <div class="about-title">About</div>
-        <div class="about-text">
-          LEM is a community for people who edit. We share scenepacks, presets and guides. Packs will be released in drops. Join our Discord to be first to know.
-        </div>
-      </div>
-
-      <aside class="panel" aria-label="Quick actions">
-        <div class="title">Quick access</div>
-        <div class="preview">Join the server for announcement drops and previews</div>
-        <div class="small" style="color:var(--muted);margin-top:10px">You will get a notice when anything drops.</div>
-        <div style="margin-top:14px">
-          <a class="btn join" href="https://discord.gg/H6y5cuck" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-discord"></i> Join Discord</a>
-        </div>
-      </aside>
+    <section class="content">
+      <div class="about-title">About</div>
+      <div class="about-text">LEM is a community for people who edit. We share scenepacks, presets and guides. Packs will be released in drops. Join our Discord to be first to know.</div>
     </section>
-
     <div class="footer">Scenepacks and resources will open soon. Join the Discord for updates.</div>
   </div>
-
-  <!-- modal -->
   <div class="modal-backdrop" id="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal" role="document" aria-live="polite">
+    <div class="modal" role="document">
       <h3 id="modalTitle">Coming soon</h3>
       <div class="body" id="modalBody"></div>
-
       <div class="actions">
-        <button class="btn join" id="modalJoin"><i class="fa-brands fa-discord"></i> Join Discord</button>
         <button class="btn ok" id="modalOkay">Okay</button>
+        <button class="btn join" id="modalJoin"><i class="fa-brands fa-discord"></i> Join Discord</button>
       </div>
     </div>
   </div>
-
   <script>
-    const modal = document.getElementById('modal');
-    const modalBody = document.getElementById('modalBody');
-    const modalOkay = document.getElementById('modalOkay');
-    const modalJoin = document.getElementById('modalJoin');
-    const linkScenepacks = document.getElementById('linkScenepacks');
-    const linkResources = document.getElementById('linkResources');
-
-    function openModal(kind) {
-      const which = kind === 'scenepacks' ? 'Scenepacks' : 'Resources';
-      modalBody.innerHTML = `
-        <p style="margin:0 0 8px 0">We do not know exactly when but the ${which} will be open soon.</p>
-        <p style="margin:0;color:${getComputedStyle(document.documentElement).getPropertyValue('--muted')};">Join our Discord for updates and early access.</p>
-      `;
-      modal.style.display = 'flex';
+    const modal=document.getElementById('modal');
+    const modalBody=document.getElementById('modalBody');
+    const modalOkay=document.getElementById('modalOkay');
+    const modalJoin=document.getElementById('modalJoin');
+    const linkScenepacks=document.getElementById('linkScenepacks');
+    const linkResources=document.getElementById('linkResources');
+    const heroScenepacks=document.getElementById('heroScenepacks');
+    const heroResources=document.getElementById('heroResources');
+    function openModal(kind){
+      const which=kind==='scenepacks'?'Scenepacks':'Resources';
+      modalBody.innerHTML=`<p style="margin:0 0 12px 0">Our devs are working hard to release ${which}. Please give us time.</p><p style="margin:0;color:${getComputedStyle(document.documentElement).getPropertyValue('--muted')};">In the meanwhile, join our Discord for updates and early access!</p>`;
+      modal.style.display='flex';
       modal.setAttribute('aria-hidden','false');
       modalOkay.focus();
     }
-
-    function closeModal() {
-      modal.style.display = 'none';
-      modal.setAttribute('aria-hidden','true');
-    }
-
-    linkScenepacks && linkScenepacks.addEventListener('click', (e) => { e.preventDefault(); openModal('scenepacks'); });
-    linkResources && linkResources.addEventListener('click', (e) => { e.preventDefault(); openModal('resources'); });
-
-    modalOkay && modalOkay.addEventListener('click', closeModal);
-    modalJoin && modalJoin.addEventListener('click', () => {
-      window.open('https://discord.gg/H6y5cuck', '_blank', 'noopener');
-    });
-
-    modal.addEventListener('click', (e) => { e.stopPropagation(); });
-    document.addEventListener('keydown', (e) => { if (e.key==='Escape' && modal.style.display==='flex'){e.preventDefault();} });
+    function closeModal(){modal.style.display='none';modal.setAttribute('aria-hidden','true');}
+    linkScenepacks&&linkScenepacks.addEventListener('click',e=>{e.preventDefault();openModal('scenepacks');});
+    linkResources&&linkResources.addEventListener('click',e=>{e.preventDefault();openModal('resources');});
+    heroScenepacks&&heroScenepacks.addEventListener('click',e=>{e.preventDefault();openModal('scenepacks');});
+    heroResources&&heroResources.addEventListener('click',e=>{e.preventDefault();openModal('resources');});
+    modalOkay&&modalOkay.addEventListener('click',closeModal);
+    modalJoin&&modalJoin.addEventListener('click',()=>{window.open('https://discord.gg/H6y5cuck','_blank','noopener');});
   </script>
 </body>
 </html>
